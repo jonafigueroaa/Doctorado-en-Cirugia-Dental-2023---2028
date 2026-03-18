@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Malla Curricular Odontología</title>
+
+<style>
+
+body{
+font-family: 'Segoe UI', sans-serif;
+background:#f4f7fb;
+margin:20px;
+}
+
+h1{
+text-align:center;
+color:#2c3e50;
+}
+
+.year{
+margin-bottom:40px;
+}
+
+.cycleContainer{
+display:flex;
+gap:20px;
+flex-wrap:wrap;
+}
+
+.cycle{
+background:white;
+padding:15px;
+border-radius:10px;
+box-shadow:0 3px 8px rgba(0,0,0,0.1);
+width:300px;
+}
+
+.cycle h3{
+text-align:center;
+color:#34495e;
+}
+
+.subject{
+
+background:#e8f0fe;
+margin:6px 0;
+padding:10px;
+border-radius:8px;
+cursor:pointer;
+transition:.3s;
+font-size:14px;
+
+}
+
+.subject:hover{
+
+transform:scale(1.03);
+
+}
+
+.approved{
+
+background:#b8f2d0;
+text-decoration:line-through;
+
+}
+
+.locked{
+
+background:#e0e0e0;
+cursor:not-allowed;
+color:#777;
+
+}
+
+.tooltip{
+
+position:relative;
+
+}
+
+.tooltip:hover::after{
+
+content:attr(data-tooltip);
+position:absolute;
+bottom:110%;
+left:0;
+background:#2c3e50;
+color:white;
+padding:6px;
+border-radius:6px;
+font-size:12px;
+width:200px;
+
+}
+
+button{
+
+margin-bottom:20px;
+background:#3498db;
+border:none;
+color:white;
+padding:8px 15px;
+border-radius:6px;
+cursor:pointer;
+
+}
+
+button:hover{
+
+background:#2980b9;
+
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Malla Curricular Odontología</h1>
+
+<button onclick="resetProgress()">Reiniciar progreso</button>
+
+<div id="grid"></div>
+
+<script>
+
+const curriculum = {
+
+"Primer Año":{
+
+"Ciclo I":[
+
+{name:"Biologia General"},
+{name:"Quimica General"},
+{name:"Anatomia Dental"},
+{name:"Metodos de Redaccion e Informatica"}
+
+],
+
+"Ciclo II":[
+
+{name:"Anatomia Humana",req:["Biologia General"]},
+{name:"Quimica Organica",req:["Quimica General"]},
+{name:"Histologia y Embriologia de la Cavidad Bucal",req:["Anatomia Dental"]},
+{name:"Materiales Dentales",req:["Anatomia Dental"]},
+{name:"Sociologia General"}
+
+]
+
+},
+
+"Segundo Año":{
+
+"Ciclo III":[
+
+{name:"Anatoma De Cabeza y Cuello Neuroanatomía",req:["Anatomia Humana"]},
+{name:"Bioquímica Medica",req:["Quimica Organica"]},
+{name:"Microbiología Médica y Oral",req:["Histologia y Embriologia de la Cavidad Bucal"]},
+{name:"Oclusión",req:["Materiales Dentales"]},
+{name:"Ingles 1"}
+
+],
+
+"Ciclo IV":[
+
+{name:"Patología General",req:["Anatoma De Cabeza y Cuello Neuroanatomía"]},
+{name:"Fisiologia Humana",req:["Bioquímica Medica"]},
+{name:"Radiologia",req:["Oclusión"]},
+{name:"Ética y Relaciones Internacionales",req:["Sociologia General"]},
+{name:"Ingles 2",req:["Ingles 1"]}
+
+]
+
+},
+
+"Tercer Año":{
+
+"Ciclo V":[
+
+{name:"Patología Bucal I",req:["Patología General"]},
+{name:"Farmacología y Terapéutica",req:["Fisiologia Humana"]},
+{name:"Operatoria Dental I",req:["Radiologia"]},
+{name:"Psicología General Aplicada",req:["Ética y Relaciones Internacionales"]},
+{name:"Ingles 3",req:["Ingles 2"]}
+
+],
+
+"Ciclo VI":[
+
+{name:"Patologia Bucal II",req:["Patología Bucal I"]},
+{name:"Medicina Interna",req:["Farmacología y Terapéutica"]},
+{name:"Operatoria Dental II",req:["Operatoria Dental I"]},
+{name:"Odontologia Preventiva",req:["Psicología General Aplicada"]},
+{name:"Ingles 4",req:["Ingles 3"]}
+
+]
+
+},
+
+"Cuarto Año":{
+
+"Ciclo VII":[
+
+{name:"Diagnóstico Bucal",req:["Patologia Bucal II"]},
+{name:"Bioseguridad",req:["Medicina Interna"]},
+{name:"Prótesis Parcial Fija I",req:["Operatoria Dental II"]},
+{name:"Prótesis Parcial Removible",req:["Operatoria Dental II"]},
+{name:"Prótesis Completa",req:["Operatoria Dental II","Odontologia Preventiva"]},
+{name:"Periodoncia I",req:["Patologia Bucal II"]}
+
+],
+
+"Ciclo VIII":[
+
+{name:"Odontopediatría",req:["Diagnóstico Bucal","Prótesis Parcial Fija I"]},
+{name:"Ortodoncia",req:["Bioseguridad","Prótesis Parcial Fija I"]},
+{name:"Prótesis Parcial Fija II",req:["Prótesis Parcial Fija I"]},
+{name:"Endodoncia",req:["Prótesis Parcial Removible"]},
+{name:"Cirugía Bucal",req:["Prótesis Completa"]},
+{name:"Periodoncia II",req:["Periodoncia I"]}
+
+]
+
+}
+
+};
+
+let approved = JSON.parse(localStorage.getItem("approvedSubjects")) || [];
+
+function save(){
+
+localStorage.setItem("approvedSubjects",JSON.stringify(approved));
+
+}
+
+function createGrid(){
+
+const grid=document.getElementById("grid");
+
+grid.innerHTML="";
+
+for(let year in curriculum){
+
+let yearDiv=document.createElement("div");
+
+yearDiv.className="year";
+
+yearDiv.innerHTML="<h2>"+year+"</h2>";
+
+let container=document.createElement("div");
+
+container.className="cycleContainer";
+
+for(let cycle in curriculum[year]){
+
+let cycleDiv=document.createElement("div");
+
+cycleDiv.className="cycle";
+
+let html="<h3>"+cycle+"</h3>";
+
+curriculum[year][cycle].forEach(sub=>{
+
+let locked=false;
+
+let missing=[];
+
+if(sub.req){
+
+sub.req.forEach(r=>{
+
+if(!approved.includes(r)){
+
+locked=true;
+
+missing.push(r);
+
+}
+
+});
+
+}
+
+let classes="subject";
+
+let tooltip="";
+
+if(approved.includes(sub.name)){
+
+classes+=" approved";
+
+}
+
+else if(locked){
+
+classes+=" locked tooltip";
+
+tooltip="Falta aprobar: "+missing.join(", ");
+
+}
+
+html+=`<div class="${classes}" 
+data-tooltip="${tooltip}"
+onclick="toggle('${sub.name}',${locked})">
+
+${sub.name}
+
+</div>`;
+
+});
+
+cycleDiv.innerHTML=html;
+
+container.appendChild(cycleDiv);
+
+}
+
+yearDiv.appendChild(container);
+
+grid.appendChild(yearDiv);
+
+}
+
+}
+
+function toggle(name,locked){
+
+if(locked)return;
+
+if(approved.includes(name)){
+
+approved=approved.filter(x=>x!=name);
+
+}else{
+
+approved.push(name);
+
+}
+
+save();
+
+createGrid();
+
+}
+
+function resetProgress(){
+
+approved=[];
+
+save();
+
+createGrid();
+
+}
+
+createGrid();
+
+</script>
+
+</body>
+
+</html>
