@@ -20,13 +20,27 @@ text-align:center;
 color:#2c3e50;
 }
 
+.year{
+
+margin-bottom:50px;
+
+}
+
+.yearTitle{
+
+font-size:22px;
+margin-bottom:15px;
+color:#2c3e50;
+border-left:6px solid #3498db;
+padding-left:10px;
+
+}
+
 .grid{
 
-display:grid;
-grid-template-columns:repeat(14,260px);
+display:flex;
 gap:18px;
 overflow-x:auto;
-padding-bottom:20px;
 
 }
 
@@ -36,7 +50,8 @@ background:white;
 padding:15px;
 border-radius:10px;
 box-shadow:0 3px 8px rgba(0,0,0,0.1);
-min-height:200px;
+width:260px;
+flex-shrink:0;
 
 }
 
@@ -58,6 +73,15 @@ border-radius:8px;
 cursor:pointer;
 transition:.25s;
 font-size:13px;
+
+}
+
+.subject small{
+
+display:block;
+font-size:11px;
+color:#666;
+margin-top:4px;
 
 }
 
@@ -102,13 +126,13 @@ background:#2c3e50;
 
 color:white;
 
-padding:6px;
+padding:7px;
 
 border-radius:6px;
 
 font-size:12px;
 
-width:210px;
+width:220px;
 
 }
 
@@ -140,128 +164,90 @@ background:#2980b9;
 
 <button onclick="resetProgress()">Reiniciar progreso</button>
 
-<div id="grid" class="grid"></div>
+<div id="grid"></div>
 
 <script>
 
-const curriculum=[
+const years=[
 
-{cycle:"Ciclo I",
-subjects:[
-"Biologia General",
-"Quimica General",
-"Anatomia Dental",
-"Metodos de Redaccion e Informatica"
-]},
+{
+year:"Primer Año",
 
-{cycle:"Ciclo II",
-subjects:[
-["Anatomia Humana",["Biologia General"]],
-["Quimica Organica",["Quimica General"]],
-["Histologia y Embriologia de la Cavidad Bucal",["Anatomia Dental"]],
-["Materiales Dentales",["Anatomia Dental"]],
-"Sociologia General"
-]},
+cycles:[
 
-{cycle:"Ciclo III",
-subjects:[
-["Anatoma De Cabeza y Cuello Neuroanatomía",["Anatomia Humana"]],
-["Bioquímica Medica",["Quimica Organica"]],
-["Microbiología Médica y Oral",["Histologia y Embriologia de la Cavidad Bucal"]],
-["Oclusión",["Materiales Dentales"]],
-"Ingles 1"
-]},
+{
+name:"Ciclo I",
 
-{cycle:"Ciclo IV",
 subjects:[
-["Patología General",["Anatoma De Cabeza y Cuello Neuroanatomía"]],
-["Fisiologia Humana",["Bioquímica Medica"]],
-["Radiologia",["Oclusión"]],
-["Ética y Relaciones Internacionales",["Sociologia General"]],
-["Ingles 2",["Ingles 1"]]
-]},
 
-{cycle:"Ciclo V",
-subjects:[
-["Patología Bucal I",["Patología General"]],
-["Farmacología y Terapéutica",["Fisiologia Humana"]],
-["Operatoria Dental I",["Radiologia"]],
-["Psicología General Aplicada",["Ética y Relaciones Internacionales"]],
-["Ingles 3",["Ingles 2"]]
-]},
+{name:"Biologia General"},
+{name:"Quimica General"},
+{name:"Anatomia Dental"},
+{name:"Metodos de Redaccion e Informatica"}
 
-{cycle:"Ciclo VI",
-subjects:[
-["Patologia Bucal II",["Patología Bucal I"]],
-["Medicina Interna",["Farmacología y Terapéutica"]],
-["Operatoria Dental II",["Operatoria Dental I"]],
-["Odontologia Preventiva",["Psicología General Aplicada"]],
-["Ingles 4",["Ingles 3"]]
-]},
+]
 
-{cycle:"Ciclo VII",
-subjects:[
-["Diagnóstico Bucal",["Patologia Bucal II"]],
-["Bioseguridad",["Medicina Interna"]],
-["Prótesis Parcial Fija I",["Operatoria Dental II"]],
-["Prótesis Parcial Removible",["Operatoria Dental II"]],
-["Prótesis Completa",["Operatoria Dental II","Odontologia Preventiva"]],
-["Periodoncia I",["Patologia Bucal II"]]
-]},
+},
 
-{cycle:"Ciclo VIII",
+{
+name:"Ciclo II",
+
 subjects:[
-["Odontopediatría",["Diagnóstico Bucal","Prótesis Parcial Fija I"]],
-["Ortodoncia",["Bioseguridad","Prótesis Parcial Fija I"]],
-["Prótesis Parcial Fija II",["Prótesis Parcial Fija I"]],
-["Endodoncia",["Prótesis Parcial Removible"]],
-["Cirugía Bucal",["Prótesis Completa"]],
-["Periodoncia II",["Periodoncia I"]]
-]}
+
+{name:"Anatomia Humana",req:["Biologia General"]},
+{name:"Quimica Organica",req:["Quimica General"]},
+{name:"Histologia y Embriologia de la Cavidad Bucal",req:["Anatomia Dental"]},
+{name:"Materiales Dentales",req:["Anatomia Dental"]},
+{name:"Sociologia General"}
+
+]
+
+}
+
+]
+
+},
+
+{
+year:"Segundo Año",
+
+cycles:[
+
+{
+name:"Ciclo III",
+
+subjects:[
+
+{name:"Anatoma De Cabeza y Cuello Neuroanatomía",req:["Anatomia Humana"]},
+{name:"Bioquímica Medica",req:["Quimica Organica"]},
+{name:"Microbiología Médica y Oral",req:["Histologia y Embriologia de la Cavidad Bucal"]},
+{name:"Oclusión",req:["Materiales Dentales"]},
+{name:"Ingles 1"}
+
+]
+
+},
+
+{
+name:"Ciclo IV",
+
+subjects:[
+
+{name:"Patología General",req:["Anatoma De Cabeza y Cuello Neuroanatomía"]},
+{name:"Fisiologia Humana",req:["Bioquímica Medica"]},
+{name:"Radiologia",req:["Oclusión"]},
+{name:"Ética y Relaciones Internacionales",req:["Sociologia General"]},
+{name:"Ingles 2",req:["Ingles 1"]}
+
+]
+
+}
+
+]
+
+}
 
 ];
-
-const allFirstToFourth = curriculum.flatMap(c=>c.subjects).map(s=>Array.isArray(s)?s[0]:s);
-
-curriculum.push(
-
-{
-cycle:"Ciclo IX",
-subjects:[
-["Clínica De Odontropediatría y Ortodoncia I",allFirstToFourth],
-["Clínica De Operatoria Dental I",allFirstToFourth],
-["Clínica De Prostodoncia I",allFirstToFourth],
-["Clínica De Endodoncia I",allFirstToFourth],
-["Clínica De Cirugía Bucal I",allFirstToFourth],
-["Clínica De Periodoncia I",allFirstToFourth],
-["Clínica De Diagnóstico Bucal I",allFirstToFourth]
-]},
-
-{
-cycle:"Ciclo X",
-subjects:[
-["Clínica De Odontropediatría y Ortodoncia II",["Clínica De Odontropediatría y Ortodoncia I"]],
-["Clínica De Operatoria Dental II",["Clínica De Operatoria Dental I"]],
-["Clínica De Prostodoncia II",["Clínica De Prostodoncia I"]],
-["Clínica De Endodoncia II",["Clínica De Endodoncia I"]],
-["Clínica De Cirugía Bucal II",["Clínica De Cirugía Bucal I"]],
-["Clínica De Periodoncia II",["Clínica De Periodoncia I"]],
-["Clínica De Diagnóstico Bucal II",["Clínica De Diagnóstico Bucal I"]]
-]},
-
-{
-cycle:"Ciclo XI",
-subjects:[
-["Clínica De Odontropediatría y Ortodoncia III",["Clínica De Odontropediatría y Ortodoncia II"]],
-["Clínica De Operatoria Dental III",["Clínica De Operatoria Dental II"]],
-["Clínica De Prostodoncia III",["Clínica De Prostodoncia II"]],
-["Clínica De Endodoncia III",["Clínica De Endodoncia II"]],
-["Clínica De Cirugía Bucal III",["Clínica De Cirugía Bucal II"]],
-["Clínica De Periodoncia III",["Clínica De Periodoncia II"]],
-["Clínica De Diagnóstico Bucal III",["Clínica De Diagnóstico Bucal II"]]
-]}
-
-);
 
 let approved=JSON.parse(localStorage.getItem("approvedSubjects"))||[];
 
@@ -271,27 +257,59 @@ localStorage.setItem("approvedSubjects",JSON.stringify(approved));
 
 }
 
+function tooltipText(missing){
+
+if(missing.length<=3){
+
+return "Falta: "+missing.join(", ");
+
+}
+
+return "Faltan "+missing.length+" materias";
+
+}
+
 function createGrid(){
 
 let grid=document.getElementById("grid");
 
 grid.innerHTML="";
 
-curriculum.forEach(cycle=>{
+years.forEach(year=>{
+
+let yearDiv=document.createElement("div");
+
+yearDiv.className="year";
+
+let title=document.createElement("div");
+
+title.className="yearTitle";
+
+title.textContent=year.year;
+
+yearDiv.appendChild(title);
+
+let container=document.createElement("div");
+
+container.className="grid";
+
+year.cycles.forEach(cycle=>{
 
 let div=document.createElement("div");
 
 div.className="cycle";
 
-let html="<h3>"+cycle.cycle+"</h3>";
+let html="<h3>"+cycle.name+"</h3>";
 
 cycle.subjects.forEach(sub=>{
 
-let name=Array.isArray(sub)?sub[0]:sub;
+let missing=[];
 
-let req=Array.isArray(sub)?sub[1]:[];
+if(sub.req){
 
-let missing=req.filter(r=>!approved.includes(r));
+missing=sub.req.filter(r=>!approved.includes(r));
+
+}
 
 let locked=missing.length>0;
 
@@ -299,7 +317,7 @@ let classes="subject";
 
 let tooltip="";
 
-if(approved.includes(name)){
+if(approved.includes(sub.name)){
 
 classes+=" approved";
 
@@ -309,15 +327,33 @@ else if(locked){
 
 classes+=" locked tooltip";
 
-tooltip="Faltan "+missing.length+" materias";
+tooltip=tooltipText(missing);
+
+}
+
+let reqText="";
+
+if(sub.req){
+
+if(sub.req.length<=3){
+
+reqText=sub.req.join(", ");
+
+}else{
+
+reqText="Requiere "+sub.req.length+" materias";
+
+}
 
 }
 
 html+=`<div class="${classes}"
 data-tooltip="${tooltip}"
-onclick="toggle('${name}',${locked})">
+onclick="toggle('${sub.name}',${locked})">
 
-${name}
+${sub.name}
+
+<small>${reqText}</small>
 
 </div>`;
 
@@ -325,7 +361,13 @@ ${name}
 
 div.innerHTML=html;
 
-grid.appendChild(div);
+container.appendChild(div);
+
+});
+
+yearDiv.appendChild(container);
+
+grid.appendChild(yearDiv);
 
 });
 
